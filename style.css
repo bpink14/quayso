@@ -1,0 +1,261 @@
+/* PHẦN 1: NHẬP PHÔNG CHỮ (FONTS)
+   - Montserrat: Dùng cho các con số vì nét dày, rõ ràng, mạnh mẽ.
+   - Quicksand: Dùng cho các tiêu đề phụ và nút bấm vì nét bo tròn, dễ nhìn, thân thiện. */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Quicksand:wght@700&display=swap');
+
+/* PHẦN 2: BIẾN SỐ (VARIABLES)
+   Lưu trữ các mã màu và kích thước dùng chung để dễ dàng thay đổi toàn bộ giao diện tại một nơi. */
+:root {
+    --gold: #FFD700;      /* Màu vàng kim chủ đạo */
+    --tet-red: #D32F2F;   /* Màu đỏ Tết tươi */
+    --dark-red: #8B0000;  /* Màu đỏ đô dùng cho chữ số */
+    --digit-h: 180px;     /* Chiều cao của một ô số */
+}
+
+/* PHẦN 3: THIẾT LẬP NỀN (BACKGROUND) */
+body {
+    /* Hình nền kết hợp: Một lớp họa tiết gạch phương Đông ẩn dưới và một lớp màu loang (gradient) đỏ đen bên trên */
+    background: #4A0000 url('https://www.transparenttextures.com/patterns/oriental-tiles.png');
+    background-image: url("hinh-nen-tet.png");
+    font-family: 'Montserrat', sans-serif;
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center; /* Căn giữa nội dung theo chiều ngang */
+    align-items: center;     /* Căn giữa nội dung theo chiều dọc */
+    overflow: hidden;        /* Ngăn hiện thanh cuộn trang */
+    color: white;
+}
+
+/* PHẦN 4: HIỆU ỨNG PHÁO HOA */
+canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none; /* Cho phép click xuyên qua lớp pháo hoa để bấm nút bên dưới */
+    z-index: 100;         /* Luôn nằm trên cùng */
+}
+
+/* PHẦN 5: HỌA TIẾT TRANG TRÍ 4 GÓC (CORNER PATTERN) */
+.corner-pattern {
+    position: fixed;
+    width: 100px;
+    height: 100px;
+    border: 5px solid var(--gold);
+    z-index: 1;
+    opacity: 0.4; /* Làm mờ họa tiết để không gây rối mắt */
+}
+/* Xóa các cạnh thừa để tạo thành hình thước thợ (L) ở mỗi góc */
+.top-left-p  { top: 20px; left: 20px; border-right: none; border-bottom: none; }
+.top-right-p { top: 20px; right: 20px; border-left: none; border-bottom: none; }
+.bot-left-p  { bottom: 20px; left: 20px; border-right: none; border-top: none; }
+.bot-right-p { bottom: 20px; right: 20px; border-left: none; border-top: none; }
+
+/* PHẦN 6: ĐÈN LỒNG & HOA MAI (DECOR) */
+.decor {
+    position: fixed;
+    font-size: 5rem;
+    z-index: 5;
+    filter: drop-shadow(0 0 20px var(--gold)); /* Tạo hiệu ứng phát sáng vàng quanh icon */
+}
+.top-left { 
+    top: 40px; left: 60px; 
+    animation: swing 3s infinite ease-in-out; /* Hiệu ứng đung đưa cho đèn lồng */
+}
+.top-right { top: 40px; right: 60px; }
+
+/* Hiệu ứng đung đưa qua lại */
+@keyframes swing {
+    0%, 100% { transform: rotate(-5deg); }
+    50% { transform: rotate(5deg); }
+}
+
+/* PHẦN 7: KHUNG CHỨA CHÍNH (CONTAINER) */
+.container {
+    background: rgba(236, 16, 16, 0.85); /* Nền đen trong suốt 85% */
+    padding: 50px;
+    border-radius: 40px;
+    border: 4px solid var(--gold);
+    box-shadow: 0 0 60px rgba(234, 61, 61, 0.8);
+    text-align: center;
+    width: 800px;
+    position: relative;
+    z-index: 10;
+}
+
+h1 { 
+    color: var(--gold); 
+    font-size: 4 rem; 
+    margin: 10px 0; 
+    text-shadow: 2px 2px 0 #1e1e18; /* Tạo đổ bóng cứng giúp chữ nổi bật */
+}
+
+/* Vùng hiển thị tên giải thưởng */
+.prize-display {
+    /* Hiệu ứng dải màu đỏ đậm ở giữa và mờ dần ra hai bên đầu */
+    background: linear-gradient(90deg, transparent, var(--tet-red), transparent);
+    padding: 20px;
+    margin: 10px 0;
+    border-top: 2px solid var(--gold);
+    border-bottom: 2px solid var(--gold);
+}
+
+/* PHẦN 8: CẤU TRÚC Ô SỐ QUAY (SLOT MACHINE) */
+.slot-machine {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 30px 0;
+}
+/* Khung gốc: Khi chưa quay xong sẽ có viền xám đen đơn giản */
+.digit-window {
+    width: 130px;
+    height: var(--digit-h);
+    background: #fff;
+    border: 6px solid #333;
+    border-radius: 15px;
+    overflow: hidden;
+    position: relative;
+    transition: all 0.3s ease; /* Hiệu ứng chuyển đổi mượt mà */
+}
+
+/* HIỆU ỨNG SÁNG VIỀN: Chỉ kích hoạt khi có class .active */
+.digit-window.active {
+    box-shadow: 0 0 20px var(--gold), inset 0 0 10px var(--gold);
+    border-color: var(--gold);
+    animation: led-glow 1s infinite alternate;
+}
+
+/* Lớp đèn chạy quanh viền: Chỉ hiện khi có class .active */
+.digit-window.active::before {
+    content: "";
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: conic-gradient(transparent, var(--gold), transparent 30%);
+    animation: rotate-led 3s linear infinite;
+    z-index: 1;
+}
+
+/* Lớp nền trắng để hiện số rõ ràng */
+.digit-window::after {
+    content: "";
+    position: absolute;
+    inset: 4px;
+    background: white;
+    border-radius: 10px;
+    z-index: 2;
+}
+
+/* Đảm bảo số luôn nằm trên cùng */
+.digit-strip {
+    position: relative;
+    z-index: 3;
+}
+
+@keyframes led-glow {
+    from { box-shadow: 0 0 10px var(--gold); }
+    to { box-shadow: 0 0 25px var(--gold); }
+}
+
+@keyframes rotate-led {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+.digit-strip span {
+    height: var(--digit-h);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10rem;
+    color: var(--dark-red); /* Màu chữ đỏ đô */
+    font-weight: 900;
+
+    /* CÁCH 1: HIỆU ỨNG VIỀN CHỮ BẰNG TEXT-SHADOW (Khuyên dùng vì mượt mà) */
+    /* Tạo 4 lớp bóng cực nhỏ ở 4 hướng để giả lập viền vàng kim xung quanh chữ đỏ */
+    text-shadow: 
+        -2px -2px 0 var(--gold),  
+         2px -2px 0 var(--gold),
+        -2px  2px 0 var(--gold),
+         2px  2px 0 var(--gold),
+         0px 0px 15px rgba(16, 14, 2, 0.09); /* Thêm một chút hào quang tỏa ra */
+
+    /* CÁCH 2: DÙNG TEXT-STROKE (Sắc nét hơn nhưng đôi khi làm chữ bị gầy đi) */
+    /* -webkit-text-stroke: 2px var(--gold); */
+}
+/* PHẦN 9: NÚT BẤM (BUTTONS) */
+button {
+    font-family: 'Quicksand', sans-serif;
+    border-radius: 50px;
+    cursor: pointer;
+    border: none;
+    font-weight: 700;
+    text-transform: uppercase;
+    transition: 0.2s; /* Hiệu ứng mượt khi bấm hoặc di chuột qua */
+}
+
+/* Nút chính (Bắt đầu quay) */
+.btn-primary {
+    background: linear-gradient(to bottom, var(--gold), #B8860B);
+    color: #4A0000;
+    padding: 20px 40px;
+    font-size: 1.4rem;
+    box-shadow: 0 8px 0 #5D0000; /* Tạo độ dày cho nút (giả lập 3D) */
+}
+/* Hiệu ứng khi nhấn giữ nút: Nút bị lún xuống */
+.btn-primary:active {
+    transform: translateY(4px);
+    box-shadow: 0 4px 0 #5D0000;
+}
+
+/* Nút phụ (Xem kết quả) */
+.btn-secondary {
+    background: transparent;
+    border: 2px solid var(--gold);
+    color: var(--gold);
+    padding: 18px 35px;
+    font-size: 1.1rem;
+    margin-left: 20px;
+}
+.btn-secondary:hover {
+    background: var(--gold);
+    color: #000;
+}
+
+/* PHẦN 10: TRANG DANH SÁCH KẾT QUẢ */
+#result-page {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: #000;
+    display: none; /* Mặc định ẩn đi */
+    flex-direction: column;
+    align-items: center;
+    z-index: 1000;
+    padding: 50px 0;
+}
+
+.scroll-area {
+    width: 80%;
+    height: 60vh;
+    overflow-y: auto; /* Cho phép cuộn nếu danh sách trúng thưởng quá dài */
+    padding: 20px;
+    border: 1px solid #333;
+}
+
+/* Từng ô số trúng thưởng trong danh sách */
+.res-item {
+    background: var(--tet-red);
+    color: white;
+    font-size: 2.5rem;
+    padding: 10px 30px;
+    border-radius: 10px;
+    margin: 10px;
+    display: inline-block;
+    border: 2px solid var(--gold);
+}
+
+/* Hiệu ứng mờ khi quay số nhanh (được thêm/xóa bằng JavaScript) */
+.motion-blur {
+    filter: blur(5px);
+}

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quay Số May Mắn Bính Ngọ 2026</title>
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    
+    <div class="corner-pattern top-left-p"></div>
+    <div class="corner-pattern top-right-p"></div>
+    <div class="corner-pattern bot-left-p"></div>
+    <div class="corner-pattern bot-right-p"></div>
+
+    <div class="decor top-left">🏮</div>
+    <div class="decor top-right">🌸</div>
+
+    <canvas id="fireworks"></canvas>
+
+    <div id="main-page" class="container">
+        <div class="top-label">🧧 XUÂN BÍNH NGỌ 2026 🧧</div>
+        
+        <h1>QUAY SỐ KHAI XUÂN</h1>
+        
+        <div class="sub-title">CHÚC MỪNG NĂM MỚI - VẠN SỰ NHƯ Ý</div>
+        
+        <div class="prize-display">
+            <h2 id="prize-name">Giải Khuyến Khích</h2> <div id="count-info">Lượt quay: 0/5</div> </div>
+
+        <div class="slot-machine">
+            <div class="digit-window"><div class="digit-strip" id="s1"><span>0</span></div></div>
+            <div class="digit-window"><div class="digit-strip" id="s2"><span>0</span></div></div>
+            <div class="digit-window"><div class="digit-strip" id="s3"><span>0</span></div></div>
+            <div class="digit-window"><div class="digit-strip" id="s4"><span>0</span></div></div>
+        </div>
+
+        <div class="btn-group">
+            <button id="spin-btn" class="btn-primary">BẮT ĐẦU QUAY</button>
+            
+            <button id="res-btn" class="btn-secondary">XEM KẾT QUẢ</button>
+        </div>
+    </div>
+
+    <div id="result-page">
+        <h1 style="color: var(--gold); font-size: 3rem;">🧧 BẢNG VÀNG MAY MẮN 🧧</h1>
+        
+        <div class="scroll-area" id="result-list"></div>
+        
+        <button id="close-res-btn" class="btn-primary" style="margin-top: 30px;">QUAY LẠI</button>
+    </div>
+
+    <audio id="snd-spin" src="https://www.soundboard.com/handler/DownLoadTrack.ashx?cliptoken=ea2c6c3e-327c-487e-9774-70650f0048e9" loop></audio>
+    
+    <audio id="snd-stop" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3"></audio>
+    
+    <audio id="snd-fire" src="https://assets.mixkit.co/active_storage/sfx/1997/1997-preview.mp3"></audio>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
