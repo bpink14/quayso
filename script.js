@@ -132,7 +132,7 @@ spinBtn.onclick = async () => {
     // Bước 3: Tạo số ngẫu nhiên 4 chữ số (0001 - 9999) và kiểm tra trùng
     let randomNum;
     do { 
-        randomNum = Math.floor(Math.random() * 3999) + 1; 
+        randomNum = Math.floor(Math.random() * 1999) + 1; 
     } while(used.has(randomNum));
     
     used.add(randomNum);

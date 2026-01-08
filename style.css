@@ -8,7 +8,7 @@
 :root {
     --gold: #FFD700;      /* Màu vàng kim chủ đạo */
     --tet-red: #D32F2F;   /* Màu đỏ Tết tươi */
-    --dark-red: #8B0000;  /* Màu đỏ đô dùng cho chữ số */
+    --dark-red: #e60a0a;  /* Màu đỏ đô dùng cho chữ số */
     --digit-h: 180px;     /* Chiều cao của một ô số */
 }
 
@@ -92,14 +92,39 @@ h1 {
 
 /* Vùng hiển thị tên giải thưởng */
 .prize-display {
-    /* Hiệu ứng dải màu đỏ đậm ở giữa và mờ dần ra hai bên đầu */
+    /* Giữ nguyên hiệu ứng dải màu đỏ đậm ở giữa và mờ dần ra hai bên */
     background: linear-gradient(90deg, transparent, var(--tet-red), transparent);
-    padding: 20px;
-    margin: 10px 0;
-    border-top: 2px solid var(--gold);
-    border-bottom: 2px solid var(--gold);
+    padding: 25px; /* Tăng khoảng cách đệm để vùng giải thưởng rộng rãi hơn */
+    margin: 20px 0;
+    border-top: 3px solid var(--gold); /* Tăng độ dày viền vàng */
+    border-bottom: 3px solid var(--gold);
+    
+    /* CHỈNH SỬA CHỮ (TYPOGRAPHY) */
+    text-align: center;
+    text-transform: uppercase; /* Bắt buộc in hoa tất cả các chữ */
 }
 
+.prize-display h2 {
+    font-size: 3.1rem; /* Tăng kích thước chữ lên rất to */
+    margin: 0;
+    color: #FFFFFF; /* Chuyển sang màu trắng tinh để cực kỳ dễ đọc trên nền đỏ */
+    font-weight: 900; /* Độ dày chữ tối đa */
+    letter-spacing: 5px; /* Khoảng cách giữa các chữ cái rộng ra cho sang trọng */
+    
+    /* Hiệu ứng đổ bóng giúp chữ nổi bật hoàn toàn khỏi nền */
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.8), 
+                 0 0 15px var(--gold); /* Thêm ánh hào quang vàng quanh chữ trắng */
+}
+
+/* Chỉnh sửa dòng hiển thị lượt quay nhỏ bên dưới */
+#count-info {
+    font-size: 1.4rem;
+    color: var(--gold); /* Màu vàng kim dễ đọc */
+    font-weight: 700;
+    margin-top: 10px;
+    font-family: 'Quicksand', sans-serif;
+    text-transform: none; /* Dòng này không cần in hoa để dễ phân biệt */
+}
 /* PHẦN 8: CẤU TRÚC Ô SỐ QUAY (SLOT MACHINE) */
 .slot-machine {
     display: flex;
@@ -112,7 +137,7 @@ h1 {
     width: 130px;
     height: var(--digit-h);
     background: #fff;
-    border: 6px solid #333;
+    border: 6px solid #fb3636;
     border-radius: 15px;
     overflow: hidden;
     position: relative;
@@ -120,23 +145,67 @@ h1 {
 }
 
 /* HIỆU ỨNG SÁNG VIỀN: Chỉ kích hoạt khi có class .active */
+/* HIỆU ỨNG SÁNG VIỀN: Tinh chỉnh màu Hổ phách (Amber) hài hòa */
 .digit-window.active {
-    box-shadow: 0 0 20px var(--gold), inset 0 0 10px var(--gold);
-    border-color: var(--gold);
-    animation: led-glow 1s infinite alternate;
+    /* Đổi sang tông màu vàng cam ấm áp hơn */
+    border-color: #FFA500; 
+    
+    /* Box shadow đa lớp: 
+       Lớp 1: Sáng nhẹ màu cam quanh viền
+       Lớp 2: Hào quang vàng nhạt lan tỏa
+       Lớp 3: Đổ bóng trắng nhẹ bên trong để làm dịu sự chuyển màu với nền trắng */
+    box-shadow: 
+        0 0 10px #FFA500, 
+        0 0 20px rgba(255, 215, 0, 0.6),
+        inset 0 0 8px rgba(255, 255, 255, 0.8); 
+        
+    animation: led-glow 1.5s infinite alternate ease-in-out;
 }
 
+/* Lớp đèn chạy quanh viền: Sử dụng Gradient dịu hơn */
+.digit-window.active::before {
+    content: "";
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    /* Chuyển từ Gold sang Amber để dịu mắt hơn trên nền trắng */
+    background: conic-gradient(
+        transparent, 
+        #FF8C00, 
+        transparent 25%
+    );
+    animation: rotate-led 4s linear infinite; /* Chậm lại một chút để trông sang hơn */
+    z-index: 1;
+}
+
+/* Animation nhịp thở (Glow): Thay đổi độ mờ thay vì chỉ thay đổi kích thước */
+@keyframes led-glow {
+    from { 
+        box-shadow: 0 0 10px #FFA500, 0 0 5px rgba(255, 215, 0, 0.3);
+        filter: brightness(1);
+    }
+    to { 
+        box-shadow: 0 0 25px #FF8C00, 0 0 15px rgba(255, 215, 0, 0.5);
+        filter: brightness(1.1); /* Tăng nhẹ độ sáng tổng thể */
+    }
+}
 /* Lớp đèn chạy quanh viền: Chỉ hiện khi có class .active */
 .digit-window.active::before {
     content: "";
     position: absolute;
     top: -50%; left: -50%;
     width: 200%; height: 200%;
-    background: conic-gradient(transparent, var(--gold), transparent 30%);
-    animation: rotate-led 3s linear infinite;
+    /* Phối hợp 3 màu: Cam đào, Vàng kim và Vàng nhạt */
+    background: conic-gradient(
+        transparent, 
+        #FFD700 10%,  /* Vàng kim rực rỡ */
+        #FF8C00 20%,  /* Cam đậm tạo chiều sâu */
+        #FFE4B5 30%,  /* Vàng kem dịu nhẹ để hòa hợp với nền trắng */
+        transparent 45%
+    );
+    animation: rotate-led 4s linear infinite; /* Chạy chậm lại cho sang trọng */
     z-index: 1;
 }
-
 /* Lớp nền trắng để hiện số rõ ràng */
 .digit-window::after {
     content: "";
@@ -168,8 +237,21 @@ h1 {
     align-items: center;
     justify-content: center;
     font-size: 10rem;
-    color: var(--dark-red); /* Màu chữ đỏ đô */
     font-weight: 900;
+    font-family: 'Inter', sans-serif; /* Font hiện đại, dày */
+    color: var(--dark-red);
+    
+    /* Tạo khối và độ rực */
+    text-shadow: 
+        1px 1px 0px #500000, 
+        2px 2px 0px #500000, 
+        3px 3px 0px #500000,
+        0px 10px 20px rgba(0, 0, 0, 0.3);
+        
+    /* Giúp chữ trông sắc nét hơn trên màn hình */
+    letter-spacing: -2px;
+    line-height: 1;
+}
 
     /* CÁCH 1: HIỆU ỨNG VIỀN CHỮ BẰNG TEXT-SHADOW (Khuyên dùng vì mượt mà) */
     /* Tạo 4 lớp bóng cực nhỏ ở 4 hướng để giả lập viền vàng kim xung quanh chữ đỏ */
@@ -186,12 +268,30 @@ h1 {
 /* PHẦN 9: NÚT BẤM (BUTTONS) */
 button {
     font-family: 'Quicksand', sans-serif;
-    border-radius: 50px;
-    cursor: pointer;
-    border: none;
     font-weight: 700;
     text-transform: uppercase;
-    transition: 0.2s; /* Hiệu ứng mượt khi bấm hoặc di chuột qua */
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    /* --- PHẦN CHỈNH SỬA CHÍNH --- */
+    border-radius: 100px;         /* Tăng hẳn lên 100px để đảm bảo bo tròn tuyệt đối */
+    padding: 15px 40px;          /* Thêm padding để nút có khoảng không bo cong */
+    background: transparent;     /* Nền trong suốt */
+    border: 2px solid var(--dark-red); /* Viền màu đỏ đô */
+    color: var(--dark-red);      /* Màu chữ */
+    
+    display: inline-flex;        /* Giúp căn chỉnh nội dung bên trong chuẩn hơn */
+    align-items: center;
+    justify-content: center;
+    outline: none;               /* Bỏ viền mặc định khi click */
+}
+
+/* Hiệu ứng khi di chuột vào (Hover) */
+button:hover {
+    background-color: var(--dark-red);
+    color: white;
+    box-shadow: 0 4px 15px rgba(139, 0, 0, 0.4); /* Đổ bóng màu đỏ nhẹ */
+    transform: scale(1.05);      /* Nút to lên một chút trông rất chuyên nghiệp */
 }
 
 /* Nút chính (Bắt đầu quay) */
@@ -227,7 +327,7 @@ button {
     position: fixed;
     top: 0; left: 0;
     width: 100%; height: 100%;
-    background: #000;
+    background: #381c1c;
     display: none; /* Mặc định ẩn đi */
     flex-direction: column;
     align-items: center;
@@ -240,7 +340,7 @@ button {
     height: 60vh;
     overflow-y: auto; /* Cho phép cuộn nếu danh sách trúng thưởng quá dài */
     padding: 20px;
-    border: 1px solid #333;
+    border: 1px solid #ee1b1b;
 }
 
 /* Từng ô số trúng thưởng trong danh sách */
